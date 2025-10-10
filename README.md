@@ -5,3 +5,10 @@ Como usar:
  No terminal escreva:
  "javac Main.java VariaveisGlobais.java LendoUmaImagem.java Kmeans.java Grafo.java CriandoGrafo.java"
  "java Main"
+
+como funciona:
+ 1º- É salvo uma imagem no pasta de imagens
+ 2º- Esta imagem é transformada em uma matriz tridimensional, [largura][altura][valorRgb]
+ 4º- Matriz da imagem passa por um algoritmo de Kmeans, que serve para uniformizar as cores
+ 5º- Matriz separa cada conjunto de valores iguais que estão conectados de forma adjscente
+ 6º- Essa matriz é transformada em um grafo
