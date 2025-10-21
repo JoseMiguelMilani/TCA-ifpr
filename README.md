@@ -3,7 +3,7 @@ Projeto feito para o instituto federal Campus Cascavel, consiste em receber uma 
 
 Como usar:
  No terminal escreva:
- "javac Main.java VariaveisGlobais.java LendoUmaImagem.java Kmeans.java Grafo.java CriandoGrafo.java"<br>
+ "javac VariaveisGlobais.java AlgoritmoUnionFind.java Main.java Grafo.java LendoUmaImagem.java ProcessandoImagem.java telaNova.java"<br>
  "java Main"<br>
 
 como funciona:
