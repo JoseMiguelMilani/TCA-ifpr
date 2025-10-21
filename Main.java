@@ -2,11 +2,11 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Random;
 import javax.imageio.ImageIO;
 
 
 public class Main {
-    
 
 
     public static void main(String[] args) {
@@ -14,10 +14,9 @@ public class Main {
         
         System.out.println("iniciou");
 
-        int quantPontosDeCor = VariaveisGlobais.getQuantiaPontosDeCor();
+        long inicio = System.currentTimeMillis();
+
         String nomeArquivoDeImagem = VariaveisGlobais.getNomeImagem();
-        int quantIteracoes = VariaveisGlobais.getQuantIteracoes();
-        int tentativa = VariaveisGlobais.getTentativas();
 
         textoGlobais();
         
@@ -26,27 +25,32 @@ public class Main {
 
         imagemLida();
 
-        Kmeans.ResultadoKmeans resultado = Kmeans.aplicarKMeansNaImagemCompleto(quantPontosDeCor, quantIteracoes, tentativa, img);
-        KmeansAplicado();
+        ProcessandoImagem.processarImagem(img);
+
+        acharPosicaoInicial(img);
 
 
-        int[][] matrizProcessada = resultado.matrizClusters;
-        VariaveisGlobais.setMatrizProcessada(matrizProcessada);
-        double[][] centroides = resultado.centroides;
+        AlgoritmoUnionFind.main(args);
 
-        imprimirMatriz2D(matrizProcessada);
-        gerarImagemComCoresKMeans(matrizProcessada, centroides, "imagem_kmeans_" + quantPontosDeCor + "cores", img);
+        int[] posicaoInicias = VariaveisGlobais.getPosIniciais();
+        int pontoInicial = posicaoInicias[0];
+        int pontoFinal = posicaoInicias[1];
 
         
-        VariaveisGlobais.setPosVerde(Kmeans.encontrarPixelVerde(img));
-        VariaveisGlobais.setPosVermelha(Kmeans.encontrarPixelVermelho(img));
 
+        System.out.printf("começo no ponto [%d], e acabo no ponto[%d]\n", pontoInicial, pontoFinal);
 
-        //chamando outros arquivos
-
-        CriandoGrafo.main(args);
         Grafo.main(args);
-        
+
+        int quantiaElemento = VariaveisGlobais.getQuantiaElemento();
+        System.out.println(quantiaElemento);
+        criarImagemComCor(quantiaElemento, nomeArquivoDeImagem);
+
+        //acaba o codigo
+        long fim = System.currentTimeMillis();
+        calcularTempoQueRodou(inicio, fim);
+
+        telaNova.main(args);    
     }
 
     public static void contarQuantiaDePixelCadaUmTem(int quantPontosDeCor, int[][] matrizPronta){
@@ -75,54 +79,6 @@ public class Main {
     }
 }
 
-    public static void gerarImagemComCoresKMeans(int[][] matrizClusters, double[][] centroides, String nomeArquivo, int[][][] imagemOriginal) {
-    int largura = matrizClusters.length;
-    int altura = matrizClusters[0].length;
-
-    BufferedImage imagem = new BufferedImage(largura, altura, BufferedImage.TYPE_INT_RGB);
-
-
-    int[][] coresCentroides = new int[centroides.length][3];
-    for (int i = 0; i < centroides.length; i++) {
-        coresCentroides[i][0] = (int) (centroides[i][0] * 255);
-        coresCentroides[i][1] = (int) (centroides[i][1] * 255);
-        coresCentroides[i][2] = (int) (centroides[i][2] * 255);
-        
-
-        coresCentroides[i][0] = Math.max(0, Math.min(255, coresCentroides[i][0]));
-        coresCentroides[i][1] = Math.max(0, Math.min(255, coresCentroides[i][1]));
-        coresCentroides[i][2] = Math.max(0, Math.min(255, coresCentroides[i][2]));
-    }
-
-    for (int x = 0; x < largura; x++) {
-        for (int y = 0; y < altura; y++) {
-            int cluster = matrizClusters[x][y];
-            Color cor;
-            
-            if (cluster == -1) {
-                cor = Color.WHITE;
-            } else {
-                if (cluster >= 0 && cluster < coresCentroides.length) {
-                    cor = new Color(
-                        coresCentroides[cluster][0],
-                        coresCentroides[cluster][1],
-                        coresCentroides[cluster][2]
-                    );
-                } else {
-                    cor = Color.BLACK;
-                }
-            }
-            imagem.setRGB(x, y, cor.getRGB());
-        }
-    }
-
-    try {
-        ImageIO.write(imagem, "png", new File("output/" + nomeArquivo + ".png"));
-        System.out.println("Imagem com " + centroides.length + " cores salva como " + nomeArquivo + ".png");
-    } catch (Exception e) {
-        System.out.println("Erro ao salvar imagem: " + e.getMessage());
-    }
-}
 
     public static void textoGlobais(){
         System.out.println("------/ Variaveis Globais Carregadas \\-----");
@@ -138,6 +94,131 @@ public class Main {
         System.out.println("------| Kmeans aplicado |-----");
         System.out.println("");
     }
+
+    public static boolean acharVerde(int[][][] img, int x, int y){
+        int[] pos = new int[2];
+
+        int r = img[x][y][0];
+        int g = img[x][y][1];
+        int b = img[x][y][2];
+
+        if (g > r+50 && g > b+50) {
+            pos[0] = x;
+            pos[1] = y;
+
+
+
+            VariaveisGlobais.setPosVerde(pos);
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean  acharVermelho(int[][][] img, int x, int y){
+        int[] pos = new int[2];
+
+        int r = img[x][y][0];
+        int g = img[x][y][1];
+        int b = img[x][y][2];
+
+        if (r > g+50 && r > b+50) {
+            pos[0] = x;
+            pos[1] = y;
+
+
+            VariaveisGlobais.setPosVermelha(pos);
+            return true;
+        }
+        return false;
+    }
+
+    public static void acharPosicaoInicial(int[][][] img){
+        boolean verde = false;
+        boolean red = false;
+       
+        
+        for (int i = 0; i < img.length; i++) {
+            
+            for (int j = 0; j < img[0].length; j++) {
+                
+                if(!verde){
+                    
+                    
+                    verde = acharVerde(img, i, j);
+
+                }
+                if (!red) {
+                    
+                    red = acharVermelho(img, i, j);
+                }
+
+            }
+        }
+    }
+
+    public static void criarImagemComCor(int quantiaElemento, String nomeArquivo){
+        int[][] matriz = VariaveisGlobais.getMatrizPronta();
+        int[][] corPorElemento = new int[quantiaElemento+1][3];
+
+        Random gerarAleatorio = new Random();
+        BufferedImage imagem = new BufferedImage( matriz.length,  matriz[0].length, BufferedImage.TYPE_INT_RGB);
+
+        for (int elemento = 0; elemento < quantiaElemento+1; elemento++) {
+            
+            for (int rgb = 0; rgb < 3; rgb++) {
+                corPorElemento[elemento][rgb] = gerarAleatorio.nextInt(255);
+                
+            }
+
+        }
+    
+        VariaveisGlobais.setCorPorElemento(corPorElemento);
+
+
+        for (int i = 0; i < matriz.length; i++) {
+
+            for (int j = 0; j < matriz[0].length; j++) {
+
+                int valorAtual = matriz[i][j];
+                Color corDoPonto;
+                int[] rgb = new int[3];
+
+                if (valorAtual == 0) {
+                    corDoPonto = Color.WHITE;
+
+                } else{
+                    
+                    for (int k = 0; k < rgb.length; k++) {
+                        rgb[k] = corPorElemento[valorAtual][k];
+                    }
+
+                    corDoPonto = new Color(rgb[0], rgb[1], rgb[2]);
+                    
+                }
+
+                imagem.setRGB(i, j, corDoPonto.getRGB());
+            }
+    }
+
+        try {
+        
+        File arquivo = new File("output/" + nomeArquivo);
+        ImageIO.write(imagem, "png", arquivo);
+
+        System.out.println("Imagem salva como: " + arquivo.getAbsolutePath());
+
+        } catch (Exception e) {
+            System.out.println("Erro ao salvar imagem: " + e.getMessage());
+        }
+    
+    }
+
+    public static void calcularTempoQueRodou(long inicio, long fim){
+        long tempo = fim - inicio;
+
+        VariaveisGlobais.setTempoQueRodou(tempo);
+    }
+
 
 
 

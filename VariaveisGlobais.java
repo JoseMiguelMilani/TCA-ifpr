@@ -4,24 +4,31 @@ public class VariaveisGlobais {
 
     public static Scanner TECLADO = new Scanner(System.in);
 
-    private static int[][] matrizProcessada;
+    private static String nomeImagem = "imagem1.png";
 
-    private static int[][] matrizPronta;
-
-    private static int[][][] imagem;
-
-    private static int quantiaPontosDeCor = 6;
-    
-    private static int quantIteracoes = 20;
-
-    private static int tentativas = 20;
-
-    private static String nomeImagem = "imagem5.png";
+    //variaveis que recebem valor durante o codigo
 
     private static int[] posVerde;
 
     private static int[] posVermelha;
 
+    private static int[] posIniciais;
+
+    private static int[][][] imagem;
+
+    private static int[][] matrizProcessada;
+
+    private static int[][] matrizPronta;
+
+    private static int quantiaElemento;
+    
+    private static int[][] corPorElemento;
+
+    private static int quantiaPassos;
+
+    private static int[] listaCaminho;
+
+    private static long tempoQueRodou;
 
 
 
@@ -53,14 +60,6 @@ public class VariaveisGlobais {
         VariaveisGlobais.imagem = imagem;
     }
 
-    public static int getQuantiaPontosDeCor() {
-        return quantiaPontosDeCor;
-    }
-
-    public static void setQuantiaPontosDeCor(int quantiaPontosDeCor) {
-        VariaveisGlobais.quantiaPontosDeCor = quantiaPontosDeCor;
-    }
-
     public static int[][] getMatrizPronta() {
         return matrizPronta;
     }
@@ -77,21 +76,7 @@ public class VariaveisGlobais {
         VariaveisGlobais.nomeImagem = nomeImagem;
     }
 
-    public static int getQuantIteracoes() {
-        return quantIteracoes;
-    }
 
-    public static void setQuantIteracoes(int quantIteracoes) {
-        VariaveisGlobais.quantIteracoes = quantIteracoes;
-    }
-
-    public static int getTentativas() {
-        return tentativas;
-    }
-
-    public static void setTentativas(int tentativas) {
-        VariaveisGlobais.tentativas = tentativas;
-    }
 
     public static int[] getPosVerde() {
         return posVerde;
@@ -107,6 +92,54 @@ public class VariaveisGlobais {
 
     public static void setPosVermelha(int[] posVermelha) {
         VariaveisGlobais.posVermelha = posVermelha;
+    }
+
+    public static int[] getPosIniciais() {
+        return posIniciais;
+    }
+
+    public static void setPosIniciais(int[] posIniciais) {
+        VariaveisGlobais.posIniciais = posIniciais;
+    }
+
+    public static int getQuantiaElemento() {
+        return quantiaElemento;
+    }
+
+    public static void setQuantiaElemento(int quantiaElemento) {
+        VariaveisGlobais.quantiaElemento = quantiaElemento;
+    }
+
+    public static int[][] getCorPorElemento() {
+        return corPorElemento;
+    }
+
+    public static void setCorPorElemento(int[][] corPorElemento) {
+        VariaveisGlobais.corPorElemento = corPorElemento;
+    }
+
+    public static int getQuantiaPassos() {
+        return quantiaPassos;
+    }
+
+    public static void setQuantiaPassos(int quantiaPassos) {
+        VariaveisGlobais.quantiaPassos = quantiaPassos;
+    }
+
+    public static int[] getListaCaminho() {
+        return listaCaminho;
+    }
+
+    public static void setListaCaminho(int[] listaCaminho) {
+        VariaveisGlobais.listaCaminho = listaCaminho;
+    }
+
+    public static long getTempoQueRodou() {
+        return tempoQueRodou;
+    }
+
+    public static void setTempoQueRodou(long tempoQueRodou) {
+        VariaveisGlobais.tempoQueRodou = tempoQueRodou;
     }
 
 

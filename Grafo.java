@@ -1,28 +1,182 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Queue;
 @SuppressWarnings ("unchecked")
+
 
 public class Grafo {
 
     private int numeroDeVertices;
     private LinkedList<Integer>[] listaAdjacencia;
+    
+    
+    public class Resultado {
+
+    //incializar
+    private int[] vetorAnterior;
+    private boolean[] visitiados;
+    private boolean temCaminho;
+
+    public Resultado(int[] vetorAnterior, boolean[] visitados, boolean temCaminho){
+        this.vetorAnterior = vetorAnterior;
+        this.visitiados  = visitados;
+        this.temCaminho = temCaminho;
+
+    }
+
+    public int[] getVetorAnterior() {
+            return vetorAnterior;
+        }
+
+    public void setVetorAnterior(int[] vetorAnterior) {
+            this.vetorAnterior = vetorAnterior;
+        }
+
+    public boolean[] getVisitiados() {
+            return visitiados;
+        }
+
+    public void setVisitiados(boolean[] visitiados) {
+            this.visitiados = visitiados;
+        }
+
+    public boolean isTemCaminho() {
+            return temCaminho;
+        }
+
+    public void setTemCaminho(boolean temCaminho) {
+            this.temCaminho = temCaminho;
+        }
+
+
+    }
+
+    public Grafo(int numeroDeVertices) {
+        this.numeroDeVertices = numeroDeVertices;
+
+        listaAdjacencia = new LinkedList[numeroDeVertices + 1];
+
+        for (int i = 1; i <= numeroDeVertices; i++) {
+            listaAdjacencia[i] = new LinkedList<>();
+        }
+
+    }
+    
 
     public static void main(String[] args) {
 
         int[] posVerde = VariaveisGlobais.getPosVerde();
-        int[] posVermelho = VariaveisGlobais.getPosVerde();
+        int[] posVermelho = VariaveisGlobais.getPosVermelha();
         int[][] matriz = VariaveisGlobais.getMatrizPronta();
 
-        Grafo grafo = criarGrafo(matriz);
+        int valorVerde = matriz[posVerde[0]][posVerde[1]];
+        int valorVermelho = matriz[posVermelho[0]][posVermelho[1]];
 
+        Grafo grafo = criarGrafo(matriz);
         grafo.imprimirGrafo();
 
-        int elementoVerde = matriz[posVerde[0]][posVerde[1]];
-        int elementoVermelho = matriz[posVermelho[0]][posVermelho[1]];
 
-        System.out.println("elemento verde: "+ elementoVerde + " Elemento Vermelho: "+elementoVermelho);
+        Resultado resposta = grafo.acharMenorCaminho(valorVerde, valorVermelho);
+
+        boolean temCaminho = resposta.isTemCaminho();
+
+        System.out.println(temCaminho);
+        
+        if(temCaminho){
+
+            int[] vetorCaminho = resposta.getVetorAnterior();
+
+            for (int i = 0; i < vetorCaminho.length; i++) {
+                System.out.printf("[%d] = %d \n", i, vetorCaminho[i]);
+            }
+
+            int pontos = imprimirMenorCaminho(vetorCaminho, valorVerde, valorVermelho);
+            
+            System.out.println(pontos+1);
+        }
+        
+        
+        
+
 
     }
 
+    public Resultado acharMenorCaminho(int inicio, int destino){
+
+        int[] anterior = new int[numeroDeVertices+1];
+        Queue<Integer> fila = new LinkedList<>();
+        boolean[] visitado = new boolean[numeroDeVertices + 1];
+        boolean temCaminho = false;
+
+        fila.add(inicio);
+        visitado[inicio] = true;
+
+        
+
+        while (!(fila.isEmpty())) {
+
+            
+            
+            int atual = fila.poll();//retorna valor e tira ele
+
+            if (atual == destino) {//condição de vitoria
+                temCaminho = true;
+                break;
+            }
+
+            for (int vizinhoDoPonto : listaAdjacencia[atual]) {
+
+                if (!(visitado[vizinhoDoPonto])) {
+                    
+                    visitado[vizinhoDoPonto] = true;
+                    anterior[vizinhoDoPonto] = atual;
+                    fila.add(vizinhoDoPonto);
+                    
+                }
+
+                
+            }
+
+
+            
+        }
+
+
+        Resultado resultado = new Resultado(anterior, visitado, temCaminho);
+        
+        return resultado;
+
+    }
+
+    public static int imprimirMenorCaminho(int[]anterior, int inicio, int fim){
+        
+        int atual = fim;
+        int contador = 0;
+        int pontos = 0;
+
+        ArrayList<Integer> elementosPassados = new ArrayList();
+
+        while (atual != inicio) {
+            
+            System.out.printf("%d <- ",atual);
+
+            atual = anterior[atual];
+
+            contador ++;
+            elementosPassados.add(atual);
+            
+        }
+        elementosPassados.reversed();
+
+        int[] caminho = transformarEmVetor(elementosPassados);  
+        VariaveisGlobais.setListaCaminho(caminho);
+        VariaveisGlobais.setQuantiaPassos(contador);
+
+        
+        System.out.println(inicio);
+       
+        return pontos;
+    }
 
     public static int acharQuantiaElemento(int[][] matriz){
         int maior =0;
@@ -35,6 +189,7 @@ public class Grafo {
             }
         }
 
+
         return maior;
     }
 
@@ -43,6 +198,8 @@ public class Grafo {
         int maior = acharQuantiaElemento(matriz);
 
         System.out.println("maior = "+maior);
+
+        VariaveisGlobais.setQuantiaElemento(maior);
 
         Grafo grafo = new Grafo(maior);
 
@@ -89,14 +246,6 @@ public class Grafo {
         }
     }
 
-    public Grafo(int numeroDeVertices) {
-        this.numeroDeVertices = numeroDeVertices;
-        listaAdjacencia = new LinkedList[numeroDeVertices + 1];
-        for (int i = 1; i <= numeroDeVertices; i++) {
-            listaAdjacencia[i] = new LinkedList<>();
-        }
-    }
-
     public void adicionarAresta(int origem, int destino) {
 
         if (origem < 1 || origem > numeroDeVertices || destino < 1 || destino > numeroDeVertices) {
@@ -122,5 +271,20 @@ public class Grafo {
         }
     }
     
-    
+    public static int[] transformarEmVetor(ArrayList<Integer> lista){
+
+        int[] vetor = new int[lista.size()];
+
+        for (int i = 0; i < lista.size(); i++) {
+            vetor[i] = lista.get(i);
+        }
+
+        return vetor; 
+
+    }
+
+
+
+
+
 }
