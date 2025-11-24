@@ -1,4 +1,4 @@
-#Creating a graph
+Creating a graph from a image and using Djikstra to find the best path
  <br>
 ---------------------------------------------------------------------------------------- <br>
  <br>
@@ -172,8 +172,7 @@ https://github.com/user-attachments/assets/fcab99e3-252b-45ec-b4a5-738b42446dea
 
 ---------------------------------------------------------------------------------------- <br>
  <br>
-Contributors: José Miguel Milani <br>
-License: MIT License <br>
-Status: Active Development <br>
+José Miguel Milani <br>
+Status: finished<br>
  <br>
 For questions or contributions, please open an issue or submit a pull request! <br>
