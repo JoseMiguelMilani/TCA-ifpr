@@ -49,96 +49,75 @@ public class telaNova {
         return botaoAnima;
     }
 
-    public static void criarAnimacao(JLabel janelaAnimacao,JLabel posicao){
+    public static void criarAnimacao(JLabel janelaAnimacao, JLabel posicao) {
+    int quantiaElemento = VariaveisGlobais.getQuantiaElemento();
+    String nomeArquivo = VariaveisGlobais.getNomeImagem();
+    int[][] matriz = VariaveisGlobais.getMatrizPronta();
+    int[] posVerde = VariaveisGlobais.getPosVerde();
+    int[] posVermelha = VariaveisGlobais.getPosVermelha();
+    int quantiaCaminho = VariaveisGlobais.getQuantiaPassos();
+    int[] vetorPasso = VariaveisGlobais.getListaCaminho();
 
-        int quantiaElemento = VariaveisGlobais.getQuantiaElemento();
-        String nomeArquivo = VariaveisGlobais.getNomeImagem();
-        int[][] matriz = VariaveisGlobais.getMatrizPronta();
-        int[]posVerde = VariaveisGlobais.getPosVerde();
-        int[]posVermelha = VariaveisGlobais.getPosVermelha();
-        int quantiaCaminho = VariaveisGlobais.getQuantiaPassos();
-        int[]vetorPasso = VariaveisGlobais.getListaCaminho();
+    int inicio = matriz[posVerde[0]][posVerde[1]];
+    int fim = matriz[posVermelha[0]][posVermelha[1]];
+    
+    int[][][] imagemMatriz = new int[matriz.length][matriz[0].length][3];
+    
+    BufferedImage imagem = new BufferedImage(matriz[0].length, matriz.length, BufferedImage.TYPE_INT_RGB);
 
-        
-        int inicio = matriz[posVerde[0]][posVerde[1]];
-        int fim = matriz[posVermelha[0]][posVermelha[1]];
-        int[][][] imagemMatriz = new int[matriz.length][matriz[0].length][3];
+    imagemMatriz = criarImagemInicial(quantiaElemento, nomeArquivo, imagemMatriz, matriz, imagem);
 
-        BufferedImage imagem = new BufferedImage(matriz.length, matriz[0].length, BufferedImage.TYPE_INT_RGB);
+    BufferedImage imagemAtual = imagemCriar(imagem, imagemMatriz);
+    
+    atualizarImagem(janelaAnimacao, imagem);
 
-        //tudo
-        imagemMatriz = criarImagemInicial(quantiaElemento, nomeArquivo, imagemMatriz, matriz, imagem);
-        BufferedImage imagemAtual = imagemCriar(imagem, imagemMatriz);
-        atualizarImagem(janelaAnimacao, imagem);
+    esperar(500);
 
-        esperar(500);
-        //inicio
+    //ponto inicial (verde)
+    imagemMatriz = pintarPonto(imagemMatriz, inicio, 1, imagem, matriz, nomeArquivo);
+    imagemAtual = imagemCriar(imagem, imagemMatriz);
+    atualizarImagem(janelaAnimacao, imagem);
+    atualizarOndeEstou(posicao, inicio);
 
-        imagemMatriz = pintarPonto(imagemMatriz, inicio, 1, imagem, matriz, nomeArquivo);
+    esperar(500);
+
+    //ponto final (vermelho)
+    imagemMatriz = pintarPonto(imagemMatriz, fim, 0, imagem, matriz, nomeArquivo);
+    imagemAtual = imagemCriar(imagem, imagemMatriz);
+    atualizarImagem(janelaAnimacao, imagem);
+    atualizarOndeEstou(posicao, fim);
+
+    esperar(500);
+
+    //caminho (azul)
+    for (int i = 0; i < quantiaCaminho - 1; i++) {
+        pintarPonto(imagemMatriz, vetorPasso[vetorPasso.length - 2 - i], 2, imagem, matriz, nomeArquivo);
         imagemAtual = imagemCriar(imagem, imagemMatriz);
         atualizarImagem(janelaAnimacao, imagem);
-
-        atualizarOndeEstou(posicao, inicio);
-
+        atualizarOndeEstou(posicao, vetorPasso[vetorPasso.length - 1 - i]);
         esperar(500);
-
-        //fim
-        imagemMatriz = pintarPonto(imagemMatriz, fim, 0, imagem, matriz, nomeArquivo);
-        imagemAtual = imagemCriar(imagem, imagemMatriz);
-        atualizarImagem(janelaAnimacao, imagem);
-
-        atualizarOndeEstou(posicao, fim);
-
-        esperar(500);
-
-
-        //resto ordenado
-        for (int i = 0; i < quantiaCaminho-1; i++) {
-
-            pintarPonto(imagemMatriz, vetorPasso[(vetorPasso.length)-2-i], 2, imagem, matriz, nomeArquivo);
-
-            imagemAtual = imagemCriar(imagem, imagemMatriz);
-            atualizarImagem(janelaAnimacao, imagem);
-
-            System.out.println(posicao);
-
-            
-
-            atualizarOndeEstou(posicao, vetorPasso[vetorPasso.length-1-i]);
-           
-            esperar(500);
-        }
-        
-
-
+    }
     }
 
-    public static int[][][] criarImagemInicial(int quantiaElemento, String nomeArquivo, int[][][] imagemMatriz, int[][] matriz, BufferedImage imagem){
-        
+    public static int[][][] criarImagemInicial(int quantiaElemento, String nomeArquivo, int[][][] imagemMatriz, int[][] matriz, BufferedImage imagem) {
 
-        for (int i = 0; i < matriz.length; i++) {
+    for (int i = 0; i < matriz.length; i++) {
+        for (int j = 0; j < matriz[0].length; j++) {
+            int valorAtual = matriz[i][j];
+            
 
-            for (int j = 0; j < matriz[0].length; j++) {
+            for (int k = 0; k < 3; k++) {
 
-                int valorAtual = matriz[i][j];
-                Color corDoPonto;
-
-                if (valorAtual == 0) {
-                    for (int k = 0; k < 3; k++) {
-                        imagemMatriz[i][j][k] = 255;
-                    }
-                    corDoPonto = Color.WHITE;
-                } else{
-                    
-                    for (int k = 0; k < 3; k++) {
-                        imagemMatriz[i][j][k] = 0;
-                    }
+                if(valorAtual == 0){
+                    imagemMatriz[i][j][k] = 255;
+                }else{
+                    imagemMatriz[i][j][k] = 0;
                 }
+                
             }
         }
-
-        return imagemMatriz;
-    
+    }
+    return imagemMatriz;
     }
 
     private static JLabel criarJanelaOndeEstou(){
@@ -285,6 +264,18 @@ public class telaNova {
     }
 
     private static void atualizarImagem(JLabel painel, BufferedImage imagem) {
+
+    BufferedImage image = new BufferedImage(imagem.getHeight(), imagem.getWidth(), BufferedImage.TYPE_INT_RGB);
+
+    rotacionarImagem(imagem, 90);
+    
+    for (int x = 0; x < imagem.getWidth(); x++) {
+        for (int y = 0; y < imagem.getHeight(); y++) {
+            int rgb = imagem.getRGB(x, y);
+            image.setRGB(y, imagem.getWidth() - 1 - x, rgb);
+        }
+    }
+
     ImageIcon icon = new ImageIcon(imagem.getScaledInstance(500, 500, Image.SCALE_SMOOTH));
     
     javax.swing.SwingUtilities.invokeLater(() -> {
@@ -302,51 +293,38 @@ public class telaNova {
     }
 
     private static BufferedImage imagemCriar(BufferedImage imagem, int[][][] imagemMatriz) {
+    for (int i = 0; i < imagemMatriz.length; i++) {
+        for (int j = 0; j < imagemMatriz[0].length; j++) {
+            int r = imagemMatriz[i][j][0];
+            int g = imagemMatriz[i][j][1];
+            int b = imagemMatriz[i][j][2];
 
-        for (int i = 0; i < imagemMatriz[0].length; i++) {
-            
-            for (int j = 0; j < imagemMatriz[1].length; j++) {
-
-                Color corDoPonto;
-
-                int r = imagemMatriz[i][j][0];
-                int g = imagemMatriz[i][j][1];
-                int b = imagemMatriz[i][j][2];
-
-                corDoPonto = new Color(r, g, b);
-                imagem.setRGB(i, j, corDoPonto.getRGB());
-            }
+            Color corDoPonto = new Color(r, g, b);
+            imagem.setRGB(j, i, corDoPonto.getRGB());
         }
-
-    
-        return imagem;
+    }
+    return imagem;
     }
 
-    public static int[][][] pintarPonto(int[][][] imagemMatriz, int valorProcurado, int cor, BufferedImage imagem, int[][] matriz, String nomeArquivo){
-        
-        for (int i = 0; i < matriz.length; i++) {
-            
-            for (int j = 0; j < matriz.length; j++) {
-                
-                int valorAtual = matriz[i][j];
+    public static int[][][] pintarPonto(int[][][] imagemMatriz, int valorProcurado, int cor, BufferedImage imagem, int[][] matriz, String nomeArquivo) {
+    for (int i = 0; i < matriz.length; i++) {
+        for (int j = 0; j < matriz[0].length; j++) {
+            int valorAtual = matriz[i][j];
 
-                if (valorAtual == valorProcurado) {
-                    
-                    for (int k = 0; k < 3; k++) {
-                        if (k == cor) {
-                            imagemMatriz[i][j][k] = 255;
-                        }else{
-                            imagemMatriz[i][j][k] = 0;
-                        }
+            if (valorAtual == valorProcurado) {
+
+                for (int k = 0; k < 3; k++) {
+                    if (k == cor) {
+                        imagemMatriz[i][j][k] = 255;
+                    } else {
+                        imagemMatriz[i][j][k] = 0;
                     }
-
                 }
-            
             }
         }
-    
-        return imagemMatriz;
     }
+    return imagemMatriz;
+}
 
     public static JPanel criarQuadrado(int posX, int posY, int[][] corElemento, int i){
         JPanel quadradoColorido = new JPanel();
@@ -483,6 +461,20 @@ public class telaNova {
         janela.add(tamanho);
     }
 
+    public static String[] lerNomesArquivosImagens(String caminhoPasta) {
+        File pasta = new File(caminhoPasta);
+        
+        String[] arquivos = pasta.list((dir, nome) -> nome.toLowerCase().endsWith(".png"));
+        
+        if (arquivos == null) {
+            System.out.println("Pasta não encontrada ou não é um diretório");
+            return new String[0];
+        }
+        
+        return arquivos;
+    }
+    
+
     //configurações
 
     private static JLabel configurarJanelaPosicao(JFrame janelaOndeEstou, int tamanhoJanelaPrincipal, JFrame janelaAnimacao){
@@ -551,8 +543,86 @@ public class telaNova {
         janelaImagem.setLocation(largura+300, altura-(altura/2)*2+(altura/7));
     }
 
+   private static BufferedImage rotacionarImagem(BufferedImage imagemOriginal, int anguloGraus) {
+    int largura = imagemOriginal.getWidth();
+    int altura = imagemOriginal.getHeight();
+    
 
+    int novaLargura, novaAltura;
+    if (anguloGraus == 90 || anguloGraus == 270) {
+        novaLargura = altura;
+        novaAltura = largura;
+    } else {
+        novaLargura = largura;
+        novaAltura = altura;
+    }
+    
+    BufferedImage imagemRotacionada = new BufferedImage(novaLargura, novaAltura, BufferedImage.TYPE_INT_RGB);
+    
+    switch (anguloGraus) {
+        case 90:
 
+            for (int x = 0; x < largura; x++) {
+                for (int y = 0; y < altura; y++) {
+                    int rgb = imagemOriginal.getRGB(x, y);
+                    imagemRotacionada.setRGB(altura - 1 - y, x, rgb);
+                }
+            }
+            break;
+            
+        case 180:
+            for (int x = 0; x < largura; x++) {
+                for (int y = 0; y < altura; y++) {
+                    int rgb = imagemOriginal.getRGB(x, y);
+                    imagemRotacionada.setRGB(largura - 1 - x, altura - 1 - y, rgb);
+                }
+            }
+            break;
+            
+        case 270:
+            for (int x = 0; x < largura; x++) {
+                for (int y = 0; y < altura; y++) {
+                    int rgb = imagemOriginal.getRGB(x, y);
+                    imagemRotacionada.setRGB(y, largura - 1 - x, rgb);
+                }
+            }
+            break;
+            
+        default:
+            return imagemOriginal;
+    }
+    
+    return imagemRotacionada;
+    }
+
+    private static void criarImagemDeMatriz3D(int[][][] matriz3D, int n) {
+    int altura = matriz3D.length;
+    int largura = matriz3D[0].length;
+    
+    BufferedImage imagem = new BufferedImage(largura, altura, BufferedImage.TYPE_INT_RGB);
+    
+    for (int y = 0; y < altura; y++) {
+        for (int x = 0; x < largura; x++) {
+            int r = matriz3D[y][x][0];
+            int g = matriz3D[y][x][1];
+            int b = matriz3D[y][x][2];
+            
+            Color cor = new Color(r, g, b);
+            imagem.setRGB(x, y, cor.getRGB());
+        }
+    }
+    try {
+        
+        File arquivo = new File("output/" + "porra" + n);
+        ImageIO.write(imagem, "png", arquivo);
+
+        System.out.println("Imagem salva como: " + arquivo.getAbsolutePath());
+
+        } catch (Exception e) {
+            System.out.println("Erro ao salvar imagem: " + e.getMessage());
+        }
+    
+    
 }
 
-
+}

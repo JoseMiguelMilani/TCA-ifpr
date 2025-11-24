@@ -1,7 +1,6 @@
 
 public class ProcessandoImagem{
 
-    
     public static void processarImagem(int[][][]imagem){
 
         int tamanhoLinhaImagem = imagem.length;

@@ -131,7 +131,6 @@ public class AlgoritmoUnionFind {
                 if (naoehBranco(matriz, i, j)) {
 
                     int posicaoAtual1d = i * coluna + j;
-                    int valorAtual = matriz[i][j];
 
                     verificarAdjascente(matriz, i, j, linha, coluna, conectados, posicaoAtual1d);
                     

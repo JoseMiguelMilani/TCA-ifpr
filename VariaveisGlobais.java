@@ -4,9 +4,17 @@ public class VariaveisGlobais {
 
     public static Scanner TECLADO = new Scanner(System.in);
 
-    private static String nomeImagem = "imagem1.png";
+    private static String caminhoPasta = "C:\\programas\\projetos\\2025\\TCA-JoseMiguel"+"\\Imagens";
 
     //variaveis que recebem valor durante o codigo
+
+    public static String getCaminhoPasta() {
+        return caminhoPasta;
+    }
+
+    public static void setCaminhoPasta(String caminhoPasta) {
+        VariaveisGlobais.caminhoPasta = caminhoPasta;
+    }
 
     private static int[] posVerde;
 
@@ -30,6 +38,10 @@ public class VariaveisGlobais {
 
     private static long tempoQueRodou;
 
+    private static int[][] valorLimites;
+
+    private static int[] distancia;
+
 
 
 
@@ -43,6 +55,23 @@ public class VariaveisGlobais {
 
 
     //getter e setters
+
+
+    public static int[] getDistancia() {
+        return distancia;
+    }
+
+    public static void setDistancia(int[] distancia) {
+        VariaveisGlobais.distancia = distancia;
+    }
+
+    public static int[][] getValorLimites() {
+        return valorLimites;
+    }
+
+    public static void setValorLimites(int[][] valorLimites) {
+        VariaveisGlobais.valorLimites = valorLimites;
+    }
 
     public static int[][] getMatrizProcessada() {
         return matrizProcessada;
@@ -69,11 +98,11 @@ public class VariaveisGlobais {
     }
 
     public static String getNomeImagem() {
-        return nomeImagem;
+        return caminhoPasta;
     }
 
     public static void setNomeImagem(String nomeImagem) {
-        VariaveisGlobais.nomeImagem = nomeImagem;
+        VariaveisGlobais.caminhoPasta = nomeImagem;
     }
 
 

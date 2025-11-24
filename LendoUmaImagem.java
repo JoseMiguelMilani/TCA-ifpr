@@ -40,16 +40,16 @@ public class LendoUmaImagem{
     public static Scanner TECLADO = new Scanner(System.in);
 
     public static void imprimirArquivoAcessado(String nomeArquivo){
-            System.out.println("---------------------------------------------------------");
-            System.out.println("Arquivo selecionado:");
-            System.out.println("Imagens/"+nomeArquivo);
-            System.out.println("---------------------------------------------------------");
+            System.out.println("/---------------------------------------\\");
+            System.out.println("| Arquivo selecionado:\t\t\t|");
+            System.out.println("| Imagens/"+nomeArquivo+ "\t\t\t|");
+            System.out.println("\\---------------------------------------/");
     }
 
     public static void imprimirErroDeAcesso(){
-        System.out.println("---------------------------------------------------------");
-        System.out.println("Arquivo não encontrado");
-        System.out.println("---------------------------------------------------------");
+        System.out.println("\\\\---------------------------------------/");
+        System.out.println("| Arquivo não encontrado\\t\\t\\t|");
+        System.out.println("\\\\---------------------------------------/");
     }
 
     public static void porValorNoVetor(int linha,int coluna, int[][][] matrizImagem, int[] rgb){

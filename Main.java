@@ -1,49 +1,53 @@
-
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Random;
-import javax.imageio.ImageIO;
+import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 
 public class Main {
 
+    //funcionamento
+
+    //Main-chamada de função
+        //conta o tempo
+        //recebe e passa o nome do arquivo
+        //chama lerImagem
+        //chama processar imagem
+        //chama unionFind
+        //chama criar grafo
+        //cria imagem
+        //termina de conta tempo
+        //chama JPanel
+
 
     public static void main(String[] args) {
-
-        
         System.out.println("iniciou");
 
-        long inicio = System.currentTimeMillis();
+        escolherImagem();
 
+        long inicio = System.currentTimeMillis();
         String nomeArquivoDeImagem = VariaveisGlobais.getNomeImagem();
 
         textoGlobais();
-        
 
         int[][][] img = LendoUmaImagem.lerImagem(nomeArquivoDeImagem);
-
         imagemLida();
 
         ProcessandoImagem.processarImagem(img);
 
         acharPosicaoInicial(img);
 
-
         AlgoritmoUnionFind.main(args);
-
         int[] posicaoInicias = VariaveisGlobais.getPosIniciais();
-        int pontoInicial = posicaoInicias[0];
-        int pontoFinal = posicaoInicias[1];
+        textoValoresInciais(posicaoInicias[0], posicaoInicias[1]);
 
-        
-
-        System.out.printf("começo no ponto [%d], e acabo no ponto[%d]\n", pontoInicial, pontoFinal);
-
+        texteiniciandoGrafo();
         Grafo.main(args);
 
         int quantiaElemento = VariaveisGlobais.getQuantiaElemento();
-        System.out.println(quantiaElemento);
+        System.out.printf("\n\n\t   --/quantia Elementos\\--\n\thá %s elementos no grafo\n\n----------------------------------------------------\n", quantiaElemento);
         criarImagemComCor(quantiaElemento, nomeArquivoDeImagem);
 
         //acaba o codigo
@@ -53,6 +57,8 @@ public class Main {
         telaNova.main(args);    
     }
 
+    public static Scanner TECLADO = new Scanner(System.in);
+
     public static void contarQuantiaDePixelCadaUmTem(int quantPontosDeCor, int[][] matrizPronta){
         int[] contador = new int[quantPontosDeCor];
         for (int x = 0; x < matrizPronta.length; x++) {
@@ -61,9 +67,6 @@ public class Main {
             }
         }
 
-        for (int i = 0; i < contador.length; i++) {
-            System.out.println("Cluster " + i + ": " + contador[i] + " pixels");
-        }
     }
 
     public static void imprimirMatriz2D(int[][] matriz) {
@@ -81,17 +84,25 @@ public class Main {
 
 
     public static void textoGlobais(){
-        System.out.println("------/ Variaveis Globais Carregadas \\-----");
+        System.out.println("");
+        System.out.println("\t--//Variaveis Globais Carregadas\\\\--");
+        System.out.println("");
+    }
+
+    public static void texteiniciandoGrafo(){
+        System.out.println("---------------/ Grafo.java rodando \\---------------");
+        System.out.println("");
+    }
+
+    public static void textoValoresInciais(int pontoInicial, int pontoFinal){
+        System.out.println("\t----/ Valores iniciais definidos \\----");
+        System.out.printf("\t      começo = [%d], fim =[%d]\n", pontoInicial, pontoFinal);
         System.out.println("");
     }
 
     public static void imagemLida(){
-        System.out.println("------| imagem lida |-----");
-        System.out.println("");
-    }
-
-    public static void KmeansAplicado(){
-        System.out.println("------| Kmeans aplicado |-----");
+        System.out.printf("\n\n");
+        System.out.println("------------------/ imagem lida \\-------------------");
         System.out.println("");
     }
 
@@ -115,7 +126,8 @@ public class Main {
     }
 
     public static boolean  acharVermelho(int[][][] img, int x, int y){
-        int[] pos = new int[2];
+        int[] pos = new 
+        int[2];
 
         int r = img[x][y][0];
         int g = img[x][y][1];
@@ -198,19 +210,19 @@ public class Main {
 
                 imagem.setRGB(i, j, corDoPonto.getRGB());
             }
-    }
+        }
 
         try {
-        
-        File arquivo = new File("output/" + nomeArquivo);
-        ImageIO.write(imagem, "png", arquivo);
+                
+            File arquivo = new File("output/" + nomeArquivo);
+            ImageIO.write(imagem, "png", arquivo);
 
-        System.out.println("Imagem salva como: " + arquivo.getAbsolutePath());
+            System.out.println("Imagem salva como: " + arquivo.getAbsolutePath());
 
-        } catch (Exception e) {
-            System.out.println("Erro ao salvar imagem: " + e.getMessage());
+        }catch (Exception e) {
+             System.out.println("Erro ao salvar imagem: " + e.getMessage());
         }
-    
+            
     }
 
     public static void calcularTempoQueRodou(long inicio, long fim){
@@ -219,7 +231,42 @@ public class Main {
         VariaveisGlobais.setTempoQueRodou(tempo);
     }
 
+    public static void escolherImagem(){
 
+        System.out.println("----------------/ escolha a imagem \\----------------");
+        System.out.println(" ");
+
+        File[] arquivos = acessandoPasta();
+
+        System.out.println(" ");
+        System.out.printf("numero escolhido: ");
+        int escolhido = TECLADO.nextInt();
+
+        System.out.println(" ");
+        System.out.println("----------------------------------------------------");
+
+
+        VariaveisGlobais.setNomeImagem((String)arquivos[escolhido-1].getName());
+
+    }
+
+    public static File[] acessandoPasta(){
+        String caminho = VariaveisGlobais.getCaminhoPasta();
+        File pasta = new File(caminho);
+        File[] arquivos = pasta.listFiles();
+        if (arquivos != null) {
+            int i = 1;
+            for (File arquivo : arquivos) {
+                String nomeArquivo = arquivo.getName();
+
+                System.out.printf("\t\t %d - %s \n", i, nomeArquivo);
+                i++;
+            }
+            System.out.println();
+        }
+
+        return arquivos;
+    }
 
 
 }
