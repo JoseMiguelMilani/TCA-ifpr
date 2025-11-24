@@ -39,8 +39,6 @@
 -Green pixels → Start point <br>
 -Red pixels → End point <br>
  <br>
-Threshold-based color detection <br>
- <br>
 3. Region Segmentation <br>
 Union-Find algorithm connects adjacent pixels <br>
  <br>
@@ -108,7 +106,7 @@ Building interactive desktop applications <br>
 Modular design and separation of concerns <br>
  <br>
 -Problem-Solving Insights: <br>
-*Handling large image matrices efficiently <br>
+*Handling large image matrix efficiently <br>
  <br>
 *Debugging complex graph algorithms <br>
  <br>
@@ -125,7 +123,7 @@ create more areas to handle error (with Try and Catch) <br>
  <br>
 *Performance Optimizations <br>
 Optimize memory usage in matrix operations <br>
-Optimeze the code flow <br>
+Optimize the code flow <br>
  <br>
 *Support for multiple image formats (JPG, BMP, etc.) <br>
  <br>
@@ -168,6 +166,10 @@ How to create a functional images: <br>
 -Ensure good contrast between regions and same RGB value <br>
 -Recommended size: 500x500 pixels <br>
  <br>
+
+
+https://github.com/user-attachments/assets/fcab99e3-252b-45ec-b4a5-738b42446dea
+
 ---------------------------------------------------------------------------------------- <br>
  <br>
 Contributors: José Miguel Milani <br>
