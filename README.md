@@ -1,5 +1,8 @@
 Creating a graph from a image and using Djikstra to find the best path
  <br>
+Explicação em português 🇧🇷 <br>
+https://www.canva.com/design/DAG51upKvTg/RuAzwRUSbGXxnpSzzuEkkg/view?utm_content=DAG51upKvTg&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hc2992b2a68<br>
+ <br>
 ---------------------------------------------------------------------------------------- <br>
  <br>
 🚀 Technologies <br>
